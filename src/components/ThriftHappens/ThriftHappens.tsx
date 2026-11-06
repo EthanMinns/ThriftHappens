@@ -29,24 +29,27 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
   // A handler that changes the selected quantity of a product
   // when ItemCard has a quantity button pressed
   const onChangeQuantity = (id: number, value: number) => {
+    const productEntry = productEntries.find((e) => e.id === id);
+    if (!productEntry) return;
+
+    const newQuantity = productEntry.itemQuantity + value;
+
+    if (newQuantity < 0) {
+      alert("Cannot set quantity below zero.");
+      return;
+    }
+
+    if (newQuantity > productEntry.quantity) {
+      alert("Quantity would exceed stock.");
+      return;
+    }
+
     setProductEntries((prev) =>
-      prev.map((entry) => {
-        if (entry.id != id) return entry;
-
-        const newQuantity = entry.itemQuantity + value;
-
-        if (newQuantity < 0) {
-          return entry;
-        }
-
-        if (newQuantity > entry.quantity) {
-          return entry;
-        }
-
-        entry.itemQuantity = newQuantity;
-
-        return entry;
-      }),
+      prev.map((entry) =>
+        entry.id === id
+          ? { ...entry, itemQuantity: newQuantity }
+          : { ...entry },
+      ),
     );
   };
 
