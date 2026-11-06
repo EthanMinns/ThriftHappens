@@ -1,7 +1,6 @@
-export default function App() {
+import ThriftHappens from "./components/ThriftHappens/ThriftHappens";
+import { products } from "./data/data";
 
-  return (
-    <>
-    </>
-  )
+export default function App() {
+  return <ThriftHappens />;
 }
