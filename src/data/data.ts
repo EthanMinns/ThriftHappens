@@ -6,11 +6,7 @@
 
 export type Fit = "men" | "women" | "kids";
 export type ClothingCategory =
-  | "t-shirt"
-  | "shirt"
-  | "hoodie"
-  | "pants"
-  | "shorts";
+  "t-shirt" | "shirt" | "hoodie" | "pants" | "shorts";
 export type ClothingSize = "XS" | "S" | "M" | "L" | "XL" | "XXL";
 
 export interface ClothingProduct {
