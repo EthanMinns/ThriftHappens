@@ -71,6 +71,7 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
       return;
     }
 
+
     setProductEntries((prev) =>
       prev.map((entry) =>
         entry.id === id
