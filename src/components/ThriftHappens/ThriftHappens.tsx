@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { ClothingProduct } from "../../data/data";
 import ItemContainer from "../ItemContainer/ItemContainer";
+import CheckoutContainer from "../CheckoutContainer/CheckoutContainer";
 
 interface ThriftHappensProps {
   products: ClothingProduct[];
@@ -8,9 +9,14 @@ interface ThriftHappensProps {
 
 export interface CheckoutEntry {
   id: number;
+  image: string;
   name: string;
   price: number;
   quantity: number;
+}
+
+export interface CheckoutContainerProps {
+  lines: CheckoutEntry[];
 }
 
 export interface ItemContainerProps {
@@ -21,6 +27,10 @@ export interface ItemContainerProps {
 export interface ItemCardProps {
   product: ClothingProduct;
   onChangeQuantity: (id: number, value: number) => void;
+}
+
+export interface CheckoutCardProps {
+  line: CheckoutEntry;
 }
 
 export default function ThriftHappens({ products }: ThriftHappensProps) {
@@ -109,6 +119,10 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
         products={productEntries}
         onChangeQuantity={onChangeQuantity}
       />
+
+      <h1>Checkout</h1>
+
+      <CheckoutContainer lines={checkoutEntries} />
     </div>
   );
 }
