@@ -14,7 +14,7 @@ export default function ItemCard({ product, onChangeQuantity, onAddToCart }: Ite
       <p>Quantity: {product.itemQuantity}</p>
       <button onClick={() => onChangeQuantity(product.id, -1)}>-</button>
       <button onClick={() => onChangeQuantity(product.id, 1)}>+</button>
-      <button onClick={() => onAddToCart(product.id)}>Add to cart</button>
+      <button onClick={() => onAddToCart(product.id)}>Add</button>
     </div>
   );
 }

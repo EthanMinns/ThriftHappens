@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { ClothingProduct } from "../../data/data";
 import ItemContainer from "../ItemContainer/ItemContainer";
 import CheckoutContainer from "../CheckoutContainer/CheckoutContainer";
+import styles from "./ThriftHappens.module.css";
 
 interface ThriftHappensProps {
   products: ClothingProduct[];
@@ -17,6 +18,12 @@ export interface CheckoutEntry {
 
 export interface CheckoutContainerProps {
   lines: CheckoutEntry[];
+  onRemoveFromCart: (id: number) => void;
+}
+
+export interface CheckoutCardProps {
+  line: CheckoutEntry;
+  onRemoveFromCart: (id: number) => void;
 }
 
 export interface ItemContainerProps {
@@ -29,10 +36,6 @@ export interface ItemCardProps {
   product: ClothingProduct;
   onChangeQuantity: (id: number, value: number) => void;
   onAddToCart: (id: number) => void;
-}
-
-export interface CheckoutCardProps {
-  line: CheckoutEntry;
 }
 
 export default function ThriftHappens({ products }: ThriftHappensProps) {
@@ -132,17 +135,31 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
     );
   };
 
+  const onRemoveFromCart = (id: number) => {
+    const checkoutEntry = checkoutEntries.find((entry) => entry.id === id);
+    if (!checkoutEntry) return;
+
+    // Restore quantity to product
+    setProductEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === id
+          ? { ...entry, quantity: entry.quantity + checkoutEntry.quantity }
+          : { ...entry },
+      ),
+    );
+
+    // Filter out the checkout entry
+    setCheckoutEntries((prev) => prev.filter((entry) => entry.id !== id));
+  };
+
   return (
-    <div>
+    <div className={styles.container}>
       <ItemContainer
         products={productEntries}
         onChangeQuantity={onChangeQuantity}
         onAddToCart={onAddToCart}
       />
-
-      <h1>Cart</h1>
-
-      <CheckoutContainer lines={checkoutEntries} />
+      <CheckoutContainer lines={checkoutEntries} onRemoveFromCart={onRemoveFromCart} />
     </div>
   );
 }
