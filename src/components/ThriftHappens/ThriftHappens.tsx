@@ -22,11 +22,13 @@ export interface CheckoutContainerProps {
 export interface ItemContainerProps {
   products: ClothingProduct[];
   onChangeQuantity: (id: number, value: number) => void;
+  onAddToCart: (id: number) => void;
 }
 
 export interface ItemCardProps {
   product: ClothingProduct;
   onChangeQuantity: (id: number, value: number) => void;
+  onAddToCart: (id: number) => void;
 }
 
 export interface CheckoutCardProps {
@@ -110,7 +112,24 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
     }
 
     // Above checks are good, just add a new entry
-
+    setCheckoutEntries((prev) => [
+      ...prev,
+      {
+        ...productEntry,
+        quantity: productEntry.itemQuantity,
+      },
+    ]);
+    setProductEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === id
+          ? {
+              ...entry,
+              quantity: entry.quantity - entry.itemQuantity,
+              itemQuantity: 0,
+            } // unsure about this here...watch it 00
+          : { ...entry },
+      ),
+    );
   };
 
   return (
@@ -118,9 +137,10 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
       <ItemContainer
         products={productEntries}
         onChangeQuantity={onChangeQuantity}
+        onAddToCart={onAddToCart}
       />
 
-      <h1>Checkout</h1>
+      <h1>Cart</h1>
 
       <CheckoutContainer lines={checkoutEntries} />
     </div>

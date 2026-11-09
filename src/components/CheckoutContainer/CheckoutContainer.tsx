@@ -7,7 +7,6 @@ export default function CheckoutContainer({ lines }: CheckoutContainerProps) {
       {lines.map((line) => (
         <CheckoutCard line={line} />
       ))}
-      ;
     </div>
   );
 }
