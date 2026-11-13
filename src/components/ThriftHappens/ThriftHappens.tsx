@@ -19,6 +19,7 @@ export interface CheckoutEntry {
 export interface CheckoutContainerProps {
   lines: CheckoutEntry[];
   onRemoveFromCart: (id: number) => void;
+  onRemoveAllFromCart: () => void;
 }
 
 export interface CheckoutCardProps {
@@ -49,6 +50,26 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
   // State to hold list of checkout items
   const [checkoutEntries, setCheckoutEntries] = useState<CheckoutEntry[]>([]);
 
+  // ===== Util =====
+
+  // Adds checkoutEntry quantity back to productEntry quantity
+  function removeFromCart(id: number) {
+    const checkoutEntry = checkoutEntries.find((entry) => entry.id === id);
+    if (!checkoutEntry) return;
+
+    // Restore quantity to product
+    setProductEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === id
+          ? { ...entry, quantity: entry.quantity + checkoutEntry.quantity }
+          : { ...entry },
+      ),
+    );
+
+    // Filter out the checkout entry
+    setCheckoutEntries((prev) => prev.filter((entry) => entry.id !== id));
+  }
+
   // ===== Handlers =====
 
   // A handler that changes the selected quantity of a product
@@ -70,7 +91,6 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
       alert("Quantity would exceed stock.");
       return;
     }
-
 
     setProductEntries((prev) =>
       prev.map((entry) =>
@@ -137,20 +157,11 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
   };
 
   const onRemoveFromCart = (id: number) => {
-    const checkoutEntry = checkoutEntries.find((entry) => entry.id === id);
-    if (!checkoutEntry) return;
+    removeFromCart(id);
+  };
 
-    // Restore quantity to product
-    setProductEntries((prev) =>
-      prev.map((entry) =>
-        entry.id === id
-          ? { ...entry, quantity: entry.quantity + checkoutEntry.quantity }
-          : { ...entry },
-      ),
-    );
-
-    // Filter out the checkout entry
-    setCheckoutEntries((prev) => prev.filter((entry) => entry.id !== id));
+  const onRemoveAllFromCart = () => {
+    checkoutEntries.forEach((entry) => removeFromCart(entry.id));
   };
 
   return (
@@ -160,7 +171,11 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
         onChangeQuantity={onChangeQuantity}
         onAddToCart={onAddToCart}
       />
-      <CheckoutContainer lines={checkoutEntries} onRemoveFromCart={onRemoveFromCart} />
+      <CheckoutContainer
+        lines={checkoutEntries}
+        onRemoveFromCart={onRemoveFromCart}
+        onRemoveAllFromCart={onRemoveAllFromCart}
+      />
     </div>
   );
 }
