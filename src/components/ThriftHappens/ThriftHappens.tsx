@@ -3,6 +3,7 @@ import type { ClothingProduct } from "../../data/data";
 import ItemContainer from "../ItemContainer/ItemContainer";
 import CheckoutContainer from "../CheckoutContainer/CheckoutContainer";
 import styles from "./ThriftHappens.module.css";
+import NavBar from "../NavBar/NavBar";
 
 interface ThriftHappensProps {
   products: ClothingProduct[];
@@ -167,17 +168,20 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
   };
 
   return (
-    <div className={styles.container}>
-      <ItemContainer
-        products={productEntries}
-        onChangeQuantity={onChangeQuantity}
-        onAddToCart={onAddToCart}
-      />
-      <CheckoutContainer
-        lines={checkoutEntries}
-        onRemoveFromCart={onRemoveFromCart}
-        onRemoveAllFromCart={onRemoveAllFromCart}
-      />
+    <div>
+      <NavBar />
+      <div className={styles.container}>
+        <ItemContainer
+          products={productEntries}
+          onChangeQuantity={onChangeQuantity}
+          onAddToCart={onAddToCart}
+        />
+        <CheckoutContainer
+          lines={checkoutEntries}
+          onRemoveFromCart={onRemoveFromCart}
+          onRemoveAllFromCart={onRemoveAllFromCart}
+        />
+      </div>
     </div>
   );
 }
