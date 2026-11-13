@@ -47,28 +47,8 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
   const [productEntries, setProductEntries] =
     useState<ClothingProduct[]>(products);
 
-  // State to hold list of checkout items
+  // State to hold list of checkoutEntries
   const [checkoutEntries, setCheckoutEntries] = useState<CheckoutEntry[]>([]);
-
-  // ===== Util =====
-
-  // Adds checkoutEntry quantity back to productEntry quantity
-  function removeFromCart(id: number) {
-    const checkoutEntry = checkoutEntries.find((entry) => entry.id === id);
-    if (!checkoutEntry) return;
-
-    // Restore quantity to product
-    setProductEntries((prev) =>
-      prev.map((entry) =>
-        entry.id === id
-          ? { ...entry, quantity: entry.quantity + checkoutEntry.quantity }
-          : { ...entry },
-      ),
-    );
-
-    // Filter out the checkout entry
-    setCheckoutEntries((prev) => prev.filter((entry) => entry.id !== id));
-  }
 
   // ===== Handlers =====
 
@@ -82,13 +62,11 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
 
     // newQuantity not less than zero
     if (newQuantity < 0) {
-      alert("Cannot set quantity below zero.");
       return;
     }
 
     // And not greater than current stock
     if (newQuantity > productEntry.quantity) {
-      alert("Quantity would exceed stock.");
       return;
     }
 
@@ -101,13 +79,14 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
     );
   };
 
+  // Handler that adds itemQuantity of productEntry to
+  // either an existing checkoutEntry or a new checkoutEntry
   const onAddToCart = (id: number) => {
     const productEntry = productEntries.find((entry) => entry.id === id);
     if (!productEntry) return;
 
     // If attempted quantity is zero
     if (productEntry.itemQuantity === 0) {
-      alert("Cannot add quantity of zero to cart.");
       return;
     }
 
@@ -135,7 +114,7 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
       return;
     }
 
-    // Above checks are good, just add a new entry
+    // Just add a new entry
     setCheckoutEntries((prev) => [
       ...prev,
       {
@@ -156,12 +135,37 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
     );
   };
 
+  // Handler that adds checkoutEntry quantity back to productEntry quantity
   const onRemoveFromCart = (id: number) => {
-    removeFromCart(id);
+    const checkoutEntry = checkoutEntries.find((entry) => entry.id === id);
+    if (!checkoutEntry) return;
+
+    // Restore quantity to product
+    setProductEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === id
+          ? { ...entry, quantity: entry.quantity + checkoutEntry.quantity }
+          : { ...entry },
+      ),
+    );
+
+    // Filter out the checkout entry
+    setCheckoutEntries((prev) => prev.filter((entry) => entry.id !== id));
   };
 
+  // Handler that loops over productEntries and adds back the matching checkoutEntry
+  // quantity if one exists. Sets checkoutEntries to empty after
   const onRemoveAllFromCart = () => {
-    checkoutEntries.forEach((entry) => removeFromCart(entry.id));
+    setProductEntries((prev) =>
+      prev.map((entry) => {
+        const checkoutEntry = checkoutEntries.find((e) => e.id === entry.id);
+        return checkoutEntry
+          ? { ...entry, quantity: entry.quantity + checkoutEntry.quantity }
+          : entry;
+      }),
+    );
+
+    setCheckoutEntries([]);
   };
 
   return (

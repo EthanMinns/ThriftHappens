@@ -1,6 +1,10 @@
 import type { ItemCardProps } from "../ThriftHappens/ThriftHappens";
 
-export default function ItemCard({ product, onChangeQuantity, onAddToCart }: ItemCardProps) {
+export default function ItemCard({
+  product,
+  onChangeQuantity,
+  onAddToCart,
+}: ItemCardProps) {
   return (
     <div>
       <img src={product.image} alt={product.name} width={100} />
@@ -14,7 +18,11 @@ export default function ItemCard({ product, onChangeQuantity, onAddToCart }: Ite
       <p>Quantity: {product.itemQuantity}</p>
       <button onClick={() => onChangeQuantity(product.id, -1)}>-</button>
       <button onClick={() => onChangeQuantity(product.id, 1)}>+</button>
-      <button onClick={() => onAddToCart(product.id)}>Add</button>
+      {product.quantity == 0 ? (
+        <p>Out of stock.</p>
+      ) : (
+        <button onClick={() => onAddToCart(product.id)}>Add</button>
+      )}
     </div>
   );
 }
