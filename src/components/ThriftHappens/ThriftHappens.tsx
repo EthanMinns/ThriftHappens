@@ -127,7 +127,7 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
                 ...entry,
                 quantity: entry.quantity - entry.itemQuantity,
                 itemQuantity: 0,
-              } // unsure about this here...watch it 00
+              }
             : { ...entry },
         ),
       );
@@ -150,7 +150,7 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
               ...entry,
               quantity: entry.quantity - entry.itemQuantity,
               itemQuantity: 0,
-            } // unsure about this here...watch it 00
+            }
           : { ...entry },
       ),
     );
