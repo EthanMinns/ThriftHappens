@@ -140,7 +140,6 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
     const checkoutEntry = checkoutEntries.find((entry) => entry.id === id);
     if (!checkoutEntry) return;
 
-    // Restore quantity to product
     setProductEntries((prev) =>
       prev.map((entry) =>
         entry.id === id
@@ -149,7 +148,6 @@ export default function ThriftHappens({ products }: ThriftHappensProps) {
       ),
     );
 
-    // Filter out the checkout entry
     setCheckoutEntries((prev) => prev.filter((entry) => entry.id !== id));
   };
 
